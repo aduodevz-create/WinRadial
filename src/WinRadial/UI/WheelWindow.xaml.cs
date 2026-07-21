@@ -301,8 +301,7 @@ public partial class WheelWindow : Window
         }
         else
         {
-            // Click outside — close
-            HideWheel();
+            // Click outside — do nothing, keep wheel open
         }
     }
 
@@ -359,11 +358,7 @@ public partial class WheelWindow : Window
     protected override void OnDeactivated(EventArgs e)
     {
         base.OnDeactivated(e);
-        // Close when window loses focus (clicked somewhere else)
-        if (IsVisible)
-        {
-            HideWheel();
-        }
+        // Keep wheel visible even when it loses focus (e.g. after an action launches an app)
     }
 
     // ─── Actions ───────────────────────────────────────
@@ -424,8 +419,6 @@ public partial class WheelWindow : Window
 
     private async void ExecuteAction(IWheelAction action)
     {
-        HideWheel();
-
         try
         {
             _log.Info($"Executing action: {action.Id} ({action.Label})");
@@ -434,6 +427,17 @@ public partial class WheelWindow : Window
         catch (Exception ex)
         {
             _log.Error($"Action '{action.Id}' failed: {ex}");
+        }
+        finally
+        {
+            // Re-assert topmost and bring wheel back to front after action
+            // (some actions launch apps that steal focus/z-order)
+            if (IsVisible)
+            {
+                Topmost = false;
+                Topmost = true;
+                Activate();
+            }
         }
     }
 }
