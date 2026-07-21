@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WinRadial Configuration",
+  "description": "Configuration schema for WinRadial radial pie-menu launcher",
+  "type": "object",
+  "required": ["hotkey", "categories"],
+  "properties": {
+    "hotkey": {
+      "type": "object",
+      "description": "Global hotkey configuration",
+      "required": ["modifiers", "key"],
+      "properties": {
+        "modifiers": {
+          "type": "string",
+          "description": "Modifier keys separated by '+'. Valid: Ctrl, Alt, Shift, Win",
+          "pattern": "^(Ctrl|Alt|Shift|Win)(\\+(Ctrl|Alt|Shift|Win))*$",
+          "examples": ["Ctrl+Alt", "Ctrl+Shift", "Alt+Shift"]
+        },
+        "key": {
+          "type": "string",
+          "description": "The trigger key (e.g., Space, F1-F12, A-Z, 0-9)",
+          "minLength": 1,
+          "examples": ["Space", "F1", "Q"]
+        }
+      }
+    },
+    "categories": {
+      "type": "array",
+      "description": "List of action categories displayed in the wheel",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "slots"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name shown in the center hub",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "iconKey": {
+            "type": "string",
+            "description": "Segoe MDL2 Assets glyph or named icon key"
+          },
+          "slots": {
+            "type": "array",
+            "description": "Action slots displayed as wedges (max 8)",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {
+              "$ref": "#/$defs/actionSlot"
+            }
+          }
+        }
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "description": "Visual appearance settings",
+      "properties": {
+        "innerRadius": {
+          "type": "number",
+          "description": "Inner radius of the wheel (center hub size)",
+          "minimum": 20,
+          "maximum": 200,
+          "default": 60
+        },
+        "outerRadius": {
+          "type": "number",
+          "description": "Outer radius of the main wheel ring",
+          "minimum": 100,
+          "maximum": 500,
+          "default": 200
+        },
+        "subMenuRadius": {
+          "type": "number",
+          "description": "Outer radius of the submenu ring",
+          "minimum": 150,
+          "maximum": 600,
+          "default": 280
+        },
+        "backgroundColor": {
+          "type": "string",
+          "description": "Background gradient start color of wedges (#AARRGGBB or #RRGGBB)",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#D9101018"
+        },
+        "backgroundColorEnd": {
+          "type": "string",
+          "description": "Background gradient end color of wedges",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#D9181828"
+        },
+        "hoverColor": {
+          "type": "string",
+          "description": "Hover gradient start color for hovered wedges",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#F0E8E8F0"
+        },
+        "hoverColorEnd": {
+          "type": "string",
+          "description": "Hover gradient end color for hovered wedges",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#D0D0D0E0"
+        },
+        "accentColor": {
+          "type": "string",
+          "description": "Accent color for borders, indicators, and interactive highlights",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#FF8B83FF"
+        },
+        "glowColor": {
+          "type": "string",
+          "description": "Color used for glow effects on rings and hub",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#606C63FF"
+        },
+        "textColor": {
+          "type": "string",
+          "description": "Primary text color",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#FFFFFFFF"
+        },
+        "subTextColor": {
+          "type": "string",
+          "description": "Secondary text color for labels",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#99AAAAAA"
+        },
+        "hoveredTextColor": {
+          "type": "string",
+          "description": "Text color used on hovered (bright) wedges",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#FF1A1A2E"
+        },
+        "opacity": {
+          "type": "number",
+          "description": "Overall wheel opacity",
+          "minimum": 0.1,
+          "maximum": 1.0,
+          "default": 0.97
+        },
+        "hubColor": {
+          "type": "string",
+          "description": "Center hub background color",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#F0101018"
+        },
+        "hubBorderColor": {
+          "type": "string",
+          "description": "Center hub border ring color",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#80606080"
+        },
+        "separatorColor": {
+          "type": "string",
+          "description": "Color of wedge separator lines",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#18FFFFFF"
+        },
+        "outerRingColor": {
+          "type": "string",
+          "description": "Color of the outer glow ring around the wheel",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$",
+          "default": "#30808098"
+        },
+        "sliceGapDegrees": {
+          "type": "number",
+          "description": "Angular gap in degrees between wedges",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 1.5
+        },
+        "showSliceNumbers": {
+          "type": "boolean",
+          "description": "Whether to show slice number badges (1-8) for keyboard shortcuts",
+          "default": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "actionSlot": {
+      "type": "object",
+      "required": ["actionId"],
+      "properties": {
+        "actionId": {
+          "type": "string",
+          "description": "Action identifier. Must be one of the registered action types.",
+          "enum": [
+            "lock_screen",
+            "sleep",
+            "toggle_dark_mode",
+            "empty_recycle_bin",
+            "screenshot",
+            "app_launch",
+            "open_folder",
+            "separator"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "description": "Display label on the wedge",
+          "maxLength": 15
+        },
+        "iconKey": {
+          "type": "string",
+          "description": "Segoe MDL2 Assets glyph or named icon key"
+        },
+        "path": {
+          "type": "string",
+          "description": "File path for app_launch and open_folder actions"
+        },
+        "arguments": {
+          "type": "string",
+          "description": "Command-line arguments for app_launch"
+        },
+        "children": {
+          "type": "array",
+          "description": "Sub-actions for submenu ring",
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/actionSlot"
+          }
+        }
+      }
+    }
+  }
+}

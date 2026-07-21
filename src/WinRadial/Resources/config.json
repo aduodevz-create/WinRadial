@@ -1,0 +1,221 @@
+{
+  "hotkey": {
+    "modifiers": "Ctrl+Alt",
+    "key": "Space"
+  },
+  "categories": [
+    {
+      "name": "Quick Actions",
+      "iconKey": "\uE7C1",
+      "slots": [
+        { "actionId": "lock_screen",      "label": "Lock",        "iconKey": "\uE72E" },
+        { "actionId": "sleep",            "label": "Sleep",       "iconKey": "\uE708" },
+        { "actionId": "toggle_dark_mode", "label": "Dark Mode",   "iconKey": "\uE793" },
+        { "actionId": "empty_recycle_bin", "label": "Empty Bin",   "iconKey": "\uE74D" },
+        { "actionId": "screenshot",       "label": "Screenshot",  "iconKey": "\uE722" },
+        {
+          "actionId": "app_launch",
+          "label": "Calculator",
+          "iconKey": "\uE8EF",
+          "path": "C:\\Windows\\System32\\calc.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Notepad",
+          "iconKey": "\uE70F",
+          "path": "C:\\Windows\\System32\\notepad.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Settings",
+          "iconKey": "\uE713",
+          "path": "C:\\Windows\\System32\\cmd.exe",
+          "arguments": "/c start ms-settings:"
+        }
+      ]
+    },
+    {
+      "name": "Apps",
+      "iconKey": "\uE74C",
+      "slots": [
+        {
+          "actionId": "app_launch",
+          "label": "Browser",
+          "iconKey": "\uE774",
+          "path": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Explorer",
+          "iconKey": "\uE838",
+          "path": "C:\\Windows\\explorer.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Terminal",
+          "iconKey": "\uE756",
+          "path": "C:\\Windows\\System32\\cmd.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Task Manager",
+          "iconKey": "\uE9D9",
+          "path": "C:\\Windows\\System32\\Taskmgr.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Notepad",
+          "iconKey": "\uE70F",
+          "path": "C:\\Windows\\System32\\notepad.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Calculator",
+          "iconKey": "\uE8EF",
+          "path": "C:\\Windows\\System32\\calc.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Paint",
+          "iconKey": "\uE71D",
+          "path": "C:\\Windows\\System32\\mspaint.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "WordPad",
+          "iconKey": "\uE70F",
+          "path": "C:\\Windows\\System32\\write.exe"
+        }
+      ]
+    },
+    {
+      "name": "System Tools",
+      "iconKey": "\uE770",
+      "slots": [
+        {
+          "actionId": "app_launch",
+          "label": "Device Mgr",
+          "iconKey": "\uE772",
+          "path": "C:\\Windows\\System32\\devmgmt.msc"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Disk Cleanup",
+          "iconKey": "\uEDA2",
+          "path": "C:\\Windows\\System32\\cleanmgr.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Event Viewer",
+          "iconKey": "\uE7BC",
+          "path": "C:\\Windows\\System32\\eventvwr.msc"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Sys Info",
+          "iconKey": "\uE946",
+          "path": "C:\\Windows\\System32\\msinfo32.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Services",
+          "iconKey": "\uE90F",
+          "path": "C:\\Windows\\System32\\services.msc"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Control Panel",
+          "iconKey": "\uE713",
+          "path": "C:\\Windows\\System32\\control.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Cmd Prompt",
+          "iconKey": "\uE756",
+          "path": "C:\\Windows\\System32\\cmd.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "PowerShell",
+          "iconKey": "\uE756",
+          "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        }
+      ]
+    },
+    {
+      "name": "Folders",
+      "iconKey": "\uE838",
+      "slots": [
+        {
+          "actionId": "open_folder",
+          "label": "Desktop",
+          "iconKey": "\uE7F4",
+          "path": "%USERPROFILE%\\Desktop"
+        },
+        {
+          "actionId": "open_folder",
+          "label": "Documents",
+          "iconKey": "\uE8A5",
+          "path": "%USERPROFILE%\\Documents"
+        },
+        {
+          "actionId": "open_folder",
+          "label": "Downloads",
+          "iconKey": "\uE896",
+          "path": "%USERPROFILE%\\Downloads"
+        },
+        {
+          "actionId": "open_folder",
+          "label": "Pictures",
+          "iconKey": "\uE71D",
+          "path": "%USERPROFILE%\\Pictures"
+        },
+        {
+          "actionId": "open_folder",
+          "label": "Music",
+          "iconKey": "\uE8D6",
+          "path": "%USERPROFILE%\\Music"
+        },
+        {
+          "actionId": "open_folder",
+          "label": "Videos",
+          "iconKey": "\uE714",
+          "path": "%USERPROFILE%\\Videos"
+        },
+        {
+          "actionId": "open_folder",
+          "label": "AppData",
+          "iconKey": "\uE838",
+          "path": "%APPDATA%"
+        },
+        {
+          "actionId": "open_folder",
+          "label": "Temp",
+          "iconKey": "\uE74D",
+          "path": "%TEMP%"
+        }
+      ]
+    }
+  ],
+  "appearance": {
+    "innerRadius": 60,
+    "outerRadius": 200,
+    "subMenuRadius": 280,
+    "backgroundColor": "#D9101018",
+    "backgroundColorEnd": "#D9181828",
+    "hoverColor": "#F0E8E8F0",
+    "hoverColorEnd": "#D0D0D0E0",
+    "accentColor": "#FF8B83FF",
+    "glowColor": "#606C63FF",
+    "textColor": "#FFFFFFFF",
+    "subTextColor": "#99AAAAAA",
+    "hoveredTextColor": "#FF1A1A2E",
+    "opacity": 0.97,
+    "hubColor": "#F0101018",
+    "hubBorderColor": "#80606080",
+    "separatorColor": "#18FFFFFF",
+    "outerRingColor": "#30808098",
+    "sliceGapDegrees": 1.5,
+    "showSliceNumbers": true
+  }
+}
