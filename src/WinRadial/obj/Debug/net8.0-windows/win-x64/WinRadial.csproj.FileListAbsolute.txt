@@ -480,3 +480,5 @@ C:\Users\mrgoy\Desktop\ewn\src\WinRadial\obj\Debug\net8.0-windows\win-x64\WinRad
 C:\Users\mrgoy\Desktop\ewn\src\WinRadial\obj\Debug\net8.0-windows\win-x64\WinRadial.genruntimeconfig.cache
 C:\Users\mrgoy\Desktop\ewn\src\WinRadial\obj\Debug\net8.0-windows\win-x64\ref\WinRadial.dll
 C:\Users\mrgoy\Desktop\ewn\src\WinRadial\obj\Debug\net8.0-windows\win-x64\WinRadial.sourcelink.json
+C:\Users\mrgoy\Desktop\ewn\src\WinRadial\obj\Debug\net8.0-windows\win-x64\UI\AppDrawerWindow.baml
+C:\Users\mrgoy\Desktop\ewn\src\WinRadial\obj\Debug\net8.0-windows\win-x64\UI\AppDrawerWindow.g.cs

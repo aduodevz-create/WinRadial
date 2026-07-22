@@ -1,9 +1,15 @@
 using System.Collections.Concurrent;
+using System.IO;
+using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using WinRadial.Actions;
 using WinRadial.Core;
 
 namespace WinRadial.UI;
@@ -13,9 +19,16 @@ namespace WinRadial.UI;
 /// SHGetFileInfo for executable file icons. All sources are local-only.
 /// Caches extracted icons for performance.
 /// </summary>
-public sealed class IconProvider
+public static class IconProvider
 {
-    private readonly ConcurrentDictionary<string, ImageSource?> _iconCache = new();
+    private static readonly ConcurrentDictionary<string, ImageSource?> _iconCache = new();
+    private static readonly HttpClient _httpClient = new();
+    private static readonly string CacheDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WinRadial", "Cache");
+
+    static IconProvider()
+    {
+        Directory.CreateDirectory(CacheDir);
+    }
 
     /// <summary>
     /// Maps well-known icon key names to Segoe MDL2 Assets Unicode glyphs.
@@ -131,7 +144,7 @@ public sealed class IconProvider
     /// Extracts the icon from an executable file using SHGetFileInfo.
     /// Returns null if extraction fails. Results are cached.
     /// </summary>
-    public ImageSource? GetFileIcon(string filePath)
+    public static ImageSource? GetFileIcon(string filePath)
     {
         return _iconCache.GetOrAdd(filePath, path =>
         {
@@ -164,5 +177,63 @@ public sealed class IconProvider
                 return null;
             }
         });
+    }
+
+    /// <summary>
+    /// Gets the ImageSource for an action if it has a file icon or a URL icon.
+    /// Triggers background download and invokes callback on success.
+    /// </summary>
+    public static ImageSource? GetIconImageSource(IWheelAction action, Action onLoaded)
+    {
+        // 1. If it's a URL in IconKey
+        if (!string.IsNullOrEmpty(action.IconKey) && 
+            (action.IconKey.StartsWith("http://") || action.IconKey.StartsWith("https://")))
+        {
+            var url = action.IconKey;
+            if (_iconCache.TryGetValue(url, out var cachedImg))
+                return cachedImg;
+
+            // Start async download
+            _iconCache[url] = null; // Mark as pending
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var hash = BitConverter.ToString(SHA256.HashData(Encoding.UTF8.GetBytes(url))).Replace("-", "");
+                    var cacheFile = Path.Combine(CacheDir, hash + ".png");
+
+                    if (!File.Exists(cacheFile))
+                    {
+                        var data = await _httpClient.GetByteArrayAsync(url);
+                        await File.WriteAllBytesAsync(cacheFile, data);
+                    }
+
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        var bmp = new BitmapImage();
+                        bmp.BeginInit();
+                        bmp.UriSource = new Uri(cacheFile);
+                        bmp.CacheOption = BitmapCacheOption.OnLoad;
+                        bmp.EndInit();
+                        bmp.Freeze();
+                        _iconCache[url] = bmp;
+                        onLoaded?.Invoke();
+                    });
+                }
+                catch
+                {
+                    // Fallback to null on failure
+                }
+            });
+            return null;
+        }
+
+        // 2. If it's an executable action
+        if (action is AppLaunchAction appLaunch && !string.IsNullOrEmpty(appLaunch.Path))
+        {
+            return GetFileIcon(appLaunch.Path);
+        }
+
+        return null;
     }
 }

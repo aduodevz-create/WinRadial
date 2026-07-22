@@ -9,10 +9,12 @@ namespace WinRadial.Actions;
 public sealed class ActionRegistry
 {
     private readonly LogService _log;
+    private readonly ConfigService _configService;
 
-    public ActionRegistry(LogService log)
+    public ActionRegistry(LogService log, ConfigService configService)
     {
         _log = log;
+        _configService = configService;
     }
 
     /// <summary>
@@ -59,6 +61,12 @@ public sealed class ActionRegistry
                 slot.Label ?? "Folder",
                 slot.IconKey ?? "\uE838",
                 slot.Path ?? "",
+                _log),
+
+            "add_program" => new AddProgramAction(
+                slot.Label ?? "Add Program",
+                slot.IconKey ?? "\uE710",
+                _configService,
                 _log),
 
             "separator" => null, // Separators are visual-only, no action

@@ -19,6 +19,7 @@ public static partial class SecurityValidator
         "screenshot",
         "app_launch",
         "open_folder",
+        "add_program",
         "separator"
     };
 

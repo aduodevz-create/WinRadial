@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 C:\Users\mrgoy\Desktop\ewn\src\WinRadial\App.xaml
-11440569616
+2-548830747
 
-22-1412824516
+25-631196527
 199-76964380
-UI\WheelWindow.xaml;
+UI\AppDrawerWindow.xaml;UI\WheelWindow.xaml;
 
 False
 

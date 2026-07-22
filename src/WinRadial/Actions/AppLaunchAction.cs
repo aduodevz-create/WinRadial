@@ -19,6 +19,7 @@ public sealed class AppLaunchAction : IWheelAction
     public string Id => "app_launch";
     public string Label { get; }
     public string IconKey { get; }
+    public string Path => _path;
     public bool HasSubmenu => _children is { Count: > 0 };
 
     public AppLaunchAction(string label, string iconKey, string path,

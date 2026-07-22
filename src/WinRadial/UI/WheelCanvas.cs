@@ -243,24 +243,43 @@ public sealed class WheelCanvas : FrameworkElement
     {
         var (sx, sy) = WheelRenderer.GetSliceCenter(index, innerR, outerR);
 
-        // Icon (glyph) — with glow effect on hover
-        var glyph = IconProvider.ResolveGlyph(action.IconKey);
+        // Try getting a real image icon first
+        var imageSource = IconProvider.GetIconImageSource(action, InvalidateVisual);
 
-        if (isHovered)
+        if (imageSource != null)
         {
-            // Glow layer behind icon
-            var glowIcon = CreateFormattedText(glyph,
-                Color.FromArgb(60, accentColor.R, accentColor.G, accentColor.B),
-                26, "Segoe MDL2 Assets");
-            dc.DrawText(glowIcon, new Point(
-                cx + sx - glowIcon.Width / 2,
-                cy + sy - glowIcon.Height / 2 - 10));
-        }
+            var imgSize = 28.0;
+            var rect = new Rect(cx + sx - imgSize / 2, cy + sy - imgSize / 2 - 10, imgSize, imgSize);
+            
+            if (isHovered)
+            {
+                // Simple glow behind the image
+                var glowPen = new Pen(new SolidColorBrush(Color.FromArgb(60, accentColor.R, accentColor.G, accentColor.B)), 4.0);
+                dc.DrawEllipse(null, glowPen, new Point(cx + sx, cy + sy - 10), imgSize / 2, imgSize / 2);
+            }
 
-        var iconText = CreateFormattedText(glyph, iconColor, 24, "Segoe MDL2 Assets");
-        dc.DrawText(iconText, new Point(
-            cx + sx - iconText.Width / 2,
-            cy + sy - iconText.Height / 2 - 10));
+            dc.DrawImage(imageSource, rect);
+        }
+        else
+        {
+            // Fallback to Segoe MDL2 Assets glyph
+            var glyph = IconProvider.ResolveGlyph(action.IconKey);
+
+            if (isHovered)
+            {
+                var glowIcon = CreateFormattedText(glyph,
+                    Color.FromArgb(60, accentColor.R, accentColor.G, accentColor.B),
+                    26, "Segoe MDL2 Assets");
+                dc.DrawText(glowIcon, new Point(
+                    cx + sx - glowIcon.Width / 2,
+                    cy + sy - glowIcon.Height / 2 - 10));
+            }
+
+            var iconText = CreateFormattedText(glyph, iconColor, 24, "Segoe MDL2 Assets");
+            dc.DrawText(iconText, new Point(
+                cx + sx - iconText.Width / 2,
+                cy + sy - iconText.Height / 2 - 10));
+        }
 
         // Label
         var label = action.Label;

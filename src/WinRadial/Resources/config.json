@@ -8,11 +8,11 @@
       "name": "Quick Actions",
       "iconKey": "\uE7C1",
       "slots": [
-        { "actionId": "lock_screen",      "label": "Lock",        "iconKey": "\uE72E" },
-        { "actionId": "sleep",            "label": "Sleep",       "iconKey": "\uE708" },
-        { "actionId": "toggle_dark_mode", "label": "Dark Mode",   "iconKey": "\uE793" },
-        { "actionId": "empty_recycle_bin", "label": "Empty Bin",   "iconKey": "\uE74D" },
-        { "actionId": "screenshot",       "label": "Screenshot",  "iconKey": "\uE722" },
+        { "actionId": "lock_screen",      "label": "Lock",        "iconKey": "https://img.icons8.com/color/48/000000/lock.png" },
+        { "actionId": "sleep",            "label": "Sleep",       "iconKey": "https://img.icons8.com/color/48/000000/sleep.png" },
+        { "actionId": "toggle_dark_mode", "label": "Dark Mode",   "iconKey": "https://img.icons8.com/color/48/000000/moon-symbol.png" },
+        { "actionId": "empty_recycle_bin", "label": "Empty Bin",   "iconKey": "https://img.icons8.com/color/48/000000/trash.png" },
+        { "actionId": "screenshot",       "label": "Screenshot",  "iconKey": "https://img.icons8.com/color/48/000000/camera.png" },
         {
           "actionId": "app_launch",
           "label": "Calculator",
@@ -28,7 +28,7 @@
         {
           "actionId": "app_launch",
           "label": "Settings",
-          "iconKey": "\uE713",
+          "iconKey": "https://img.icons8.com/color/48/000000/settings.png",
           "path": "C:\\Windows\\System32\\cmd.exe",
           "arguments": "/c start ms-settings:"
         }
@@ -143,56 +143,13 @@
       ]
     },
     {
-      "name": "Folders",
-      "iconKey": "\uE838",
+      "name": "Customize",
+      "iconKey": "\uE710",
       "slots": [
         {
-          "actionId": "open_folder",
-          "label": "Desktop",
-          "iconKey": "\uE7F4",
-          "path": "%USERPROFILE%\\Desktop"
-        },
-        {
-          "actionId": "open_folder",
-          "label": "Documents",
-          "iconKey": "\uE8A5",
-          "path": "%USERPROFILE%\\Documents"
-        },
-        {
-          "actionId": "open_folder",
-          "label": "Downloads",
-          "iconKey": "\uE896",
-          "path": "%USERPROFILE%\\Downloads"
-        },
-        {
-          "actionId": "open_folder",
-          "label": "Pictures",
-          "iconKey": "\uE71D",
-          "path": "%USERPROFILE%\\Pictures"
-        },
-        {
-          "actionId": "open_folder",
-          "label": "Music",
-          "iconKey": "\uE8D6",
-          "path": "%USERPROFILE%\\Music"
-        },
-        {
-          "actionId": "open_folder",
-          "label": "Videos",
-          "iconKey": "\uE714",
-          "path": "%USERPROFILE%\\Videos"
-        },
-        {
-          "actionId": "open_folder",
-          "label": "AppData",
-          "iconKey": "\uE838",
-          "path": "%APPDATA%"
-        },
-        {
-          "actionId": "open_folder",
-          "label": "Temp",
-          "iconKey": "\uE74D",
-          "path": "%TEMP%"
+          "actionId": "add_program",
+          "label": "Add Program",
+          "iconKey": "\uE710"
         }
       ]
     }

@@ -241,4 +241,24 @@ public sealed class ConfigService
             _log.Error($"Failed to write default config: {ex.Message}");
         }
     }
+    /// <summary>
+    /// Saves the current configuration to disk.
+    /// </summary>
+    public void Save(WinRadialConfig config)
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(config, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+            File.WriteAllText(_configFilePath, json);
+            _log.Info($"Config saved to {_configFilePath}");
+        }
+        catch (Exception ex)
+        {
+            _log.Error($"Failed to save config: {ex.Message}");
+        }
+    }
 }

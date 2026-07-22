@@ -65,7 +65,7 @@ public partial class App : Application
         _logService.Info($"Config loaded: {config.Categories.Count} categories, hotkey={config.Hotkey.Modifiers}+{config.Hotkey.Key}");
 
         // 3. Action registry
-        _actionRegistry = new ActionRegistry(_logService);
+        _actionRegistry = new ActionRegistry(_logService, _configService);
 
         // 4. Create the wheel window (hidden, reused across activations)
         _wheelWindow = new WheelWindow(config, _actionRegistry, _logService);
@@ -76,7 +76,7 @@ public partial class App : Application
         _hotkeyManager.Register();
 
         // 6. System tray icon
-        _trayIconManager = new TrayIconManager(_logService, _configService, OnReloadConfig, OnExit);
+        _trayIconManager = new TrayIconManager(_logService, _configService, ReloadConfig, OnExit);
 
         _logService.Info("WinRadial startup complete.");
     }
@@ -95,7 +95,7 @@ public partial class App : Application
         }
     }
 
-    private void OnReloadConfig()
+    public void ReloadConfig()
     {
         try
         {
