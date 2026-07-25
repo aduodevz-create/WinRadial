@@ -1,0 +1,2 @@
+C:\Users\mrgoy\Desktop\ewn\src\WinRadial\bin\Release\net8.0-windows\win-x64\publish\WinRadial.pdb
+C:\Users\mrgoy\Desktop\ewn\src\WinRadial\bin\Release\net8.0-windows\win-x64\publish\WinRadial.exe

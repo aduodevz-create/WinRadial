@@ -178,7 +178,8 @@ public sealed class TrayIconManager : IDisposable
         var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0";
         MessageBox.Show(
             $"WinRadial v{version}\n\n" +
-            "A radial pie-menu launcher for Windows.\n\n" +
+            "A radial pie-menu launcher for Windows.\n" +
+            "Created by AmanGoyal\n\n" +
             "Hotkey: Ctrl+Alt+Space\n" +
             "Config: %APPDATA%\\WinRadial\\config.json\n\n" +
             "No network access • No elevation • Local only",
