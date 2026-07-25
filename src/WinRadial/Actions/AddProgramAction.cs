@@ -30,49 +30,83 @@ public sealed class AddProgramAction : IWheelAction
     {
         try
         {
-            var window = new AppDrawerWindow();
+            var config = _configService.Load();
+            var window = new AppDrawerWindow(config);
             if (window.ShowDialog() == true && window.SelectedApp != null)
             {
                 var app = window.SelectedApp;
                 
-                var config = _configService.Load();
-                
-                // Find Customize category
-                var category = config.Categories.FirstOrDefault(c => c.Name == "Customize");
-                if (category == null)
+                if (window.IsInnerRingSelected)
                 {
-                    _log.Warning("Customize category not found in config.");
-                    return;
-                }
-
-                if (category.Slots.Count >= 8)
-                {
-                    // Replace the item just before the last one (assuming last is "add_program")
-                    category.Slots.Insert(category.Slots.Count - 1, new ActionSlotConfig
+                    // Add as a new Category
+                    if (config.Categories.Count < 8)
                     {
-                        ActionId = "app_launch",
-                        Label = app.Name,
-                        IconKey = "\uE737", // Default app icon
-                        Path = app.ExecutablePath
-                    });
-                    
-                    // Maintain exactly 8 items, prefer keeping "add_program" at the end
-                    if (category.Slots.Count > 8)
+                        config.Categories.Add(new CategoryConfig
+                        {
+                            Name = app.Name,
+                            IconKey = "\uE737", // Default app icon
+                            Slots = new List<ActionSlotConfig>
+                            {
+                                new ActionSlotConfig
+                                {
+                                    ActionId = "app_launch",
+                                    Label = app.Name,
+                                    IconKey = "\uE737",
+                                    Path = app.ExecutablePath
+                                }
+                            }
+                        });
+                    }
+                    else
                     {
-                        category.Slots.RemoveAt(0);
+                        _log.Warning("Maximum of 8 categories reached. Cannot add inner ring item.");
+                        MessageBox.Show("Maximum of 8 categories already reached on the inner ring.", "Limit Reached", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
                     }
                 }
                 else
                 {
-                    // Insert before the last item (the Add Program button itself)
-                    var insertIndex = Math.Max(0, category.Slots.Count - 1);
-                    category.Slots.Insert(insertIndex, new ActionSlotConfig
+                    // Add to existing category
+                    var categoryName = window.SelectedCategoryName ?? "Customize";
+                    var category = config.Categories.FirstOrDefault(c => c.Name == categoryName);
+                    
+                    if (category == null)
                     {
-                        ActionId = "app_launch",
-                        Label = app.Name,
-                        IconKey = "\uE737", 
-                        Path = app.ExecutablePath
-                    });
+                        _log.Warning($"Category {categoryName} not found.");
+                        return;
+                    }
+
+                    // Insert the new app
+                    if (category.Slots.Count >= 8)
+                    {
+                        // Replace the item just before the last one
+                        category.Slots.Insert(category.Slots.Count - 1, new ActionSlotConfig
+                        {
+                            ActionId = "app_launch",
+                            Label = app.Name,
+                            IconKey = "\uE737", // Default app icon
+                            Path = app.ExecutablePath
+                        });
+                        
+                        // Maintain exactly 8 items
+                        if (category.Slots.Count > 8)
+                        {
+                            category.Slots.RemoveAt(0);
+                        }
+                    }
+                    else
+                    {
+                        var isCustomizeCategory = category.Name == "Customize";
+                        // If it's customize category, insert before the last item (Add Program). Else insert at end.
+                        var insertIndex = isCustomizeCategory ? Math.Max(0, category.Slots.Count - 1) : category.Slots.Count;
+                        category.Slots.Insert(insertIndex, new ActionSlotConfig
+                        {
+                            ActionId = "app_launch",
+                            Label = app.Name,
+                            IconKey = "\uE737", 
+                            Path = app.ExecutablePath
+                        });
+                    }
                 }
 
                 _configService.Save(config);

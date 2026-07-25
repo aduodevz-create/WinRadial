@@ -13,21 +13,50 @@ public partial class AppDrawerWindow : Window
 {
     private List<AppInfo> _allApps = new();
     public AppInfo? SelectedApp { get; private set; }
-    private bool _isSearchPlaceholder = true;
+    public bool IsInnerRingSelected => RbInnerRing.IsChecked == true;
+    public string? SelectedCategoryName => CategoryCombo.SelectedItem as string;
 
-    public AppDrawerWindow()
+    private bool _isSearchPlaceholder = true;
+    private readonly WinRadialConfig _config;
+
+    public AppDrawerWindow(WinRadialConfig config)
     {
         InitializeComponent();
+        _config = config;
         Loaded += AppDrawerWindow_Loaded;
+    }
+
+    private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton == MouseButton.Left)
+            this.DragMove();
     }
 
     private async void AppDrawerWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        // Populate Categories Dropdown
+        foreach (var cat in _config.Categories)
+        {
+            CategoryCombo.Items.Add(cat.Name);
+        }
+        if (CategoryCombo.Items.Count > 0)
+        {
+            CategoryCombo.SelectedIndex = 0;
+        }
+
         // Load apps asynchronously so we don't freeze the UI
         _allApps = await Task.Run(() => StartMenuAppFetcher.GetInstalledApps());
         
         LoadingText.Visibility = Visibility.Collapsed;
         AppList.ItemsSource = _allApps;
+    }
+
+    private void RbLocation_Checked(object sender, RoutedEventArgs e)
+    {
+        if (CategoryCombo != null)
+        {
+            CategoryCombo.IsEnabled = RbOuterRing.IsChecked == true;
+        }
     }
 
     private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)

@@ -23,6 +23,18 @@ public sealed class WheelCanvas : FrameworkElement
     private string _categoryName = "";
     private int _currentPage;
     private int _totalPages;
+    private class SubmenuState
+    {
+        public List<IWheelAction> Actions = [];
+        public int ParentSlice = -1;
+        public double Opacity = 0.0;
+        public double Scale = 0.8;
+        public double Rotation = 15.0; // degrees
+        public bool IsActive = false;
+    }
+
+    private List<SubmenuState> _submenuStates = [];
+    private double[] _innerSliceScales = new double[WheelRenderer.SliceCount];
     private int _hoveredHubArea = -1; // -1=none, 0=left arrow, 1=right arrow
 
     // Center of the wheel in local coordinates
@@ -39,6 +51,51 @@ public sealed class WheelCanvas : FrameworkElement
     {
         _appearance = appearance;
         IsHitTestVisible = false; // Parent window handles input
+        for (int i = 0; i < WheelRenderer.SliceCount; i++) _innerSliceScales[i] = 1.0;
+        CompositionTarget.Rendering += OnRendering;
+    }
+
+    private void OnRendering(object? sender, EventArgs e)
+    {
+        bool needsRedraw = false;
+        
+        // animate inner slices
+        for (int i = 0; i < WheelRenderer.SliceCount; i++)
+        {
+            double targetScale = ((i == _hoveredSlice && !_submenuOpen) || (i == _submenuParentSlice && _submenuOpen)) ? 1.08 : 1.0;
+            if (Math.Abs(_innerSliceScales[i] - targetScale) > 0.001)
+            {
+                _innerSliceScales[i] += (targetScale - _innerSliceScales[i]) * 0.35; // spring-like lerp
+                needsRedraw = true;
+            }
+        }
+        
+        // animate submenus
+        for (int i = _submenuStates.Count - 1; i >= 0; i--)
+        {
+            var s = _submenuStates[i];
+            double targetOp = s.IsActive ? 1.0 : 0.0;
+            double targetScale = s.IsActive ? 1.0 : 0.8;
+            double targetRot = s.IsActive ? 0.0 : -15.0;
+
+            if (Math.Abs(s.Opacity - targetOp) > 0.005 || Math.Abs(s.Scale - targetScale) > 0.005 || Math.Abs(s.Rotation - targetRot) > 0.05)
+            {
+                s.Opacity += (targetOp - s.Opacity) * 0.25;
+                s.Scale += (targetScale - s.Scale) * 0.25;
+                s.Rotation += (targetRot - s.Rotation) * 0.25;
+                needsRedraw = true;
+            }
+            else if (!s.IsActive)
+            {
+                _submenuStates.RemoveAt(i);
+                needsRedraw = true;
+            }
+        }
+
+        if (needsRedraw)
+        {
+            InvalidateVisual();
+        }
     }
 
     public void UpdateState(
@@ -56,6 +113,31 @@ public sealed class WheelCanvas : FrameworkElement
         _actions = actions;
         _hoveredSlice = hoveredSlice;
         _hoveredSubSlice = hoveredSubSlice;
+        
+        if (_submenuOpen != submenuOpen || _submenuParentSlice != submenuParentSlice)
+        {
+            // Transition!
+            foreach (var s in _submenuStates) s.IsActive = false;
+            
+            if (submenuOpen)
+            {
+                _submenuStates.Add(new SubmenuState 
+                {
+                    Actions = new List<IWheelAction>(subActions),
+                    ParentSlice = submenuParentSlice,
+                    IsActive = true,
+                    Opacity = 0.0,
+                    Scale = 0.8,
+                    Rotation = 15.0
+                });
+            }
+        }
+        else if (submenuOpen && _submenuStates.Count > 0)
+        {
+            var active = _submenuStates.FirstOrDefault(s => s.IsActive);
+            if (active != null) active.Actions = new List<IWheelAction>(subActions);
+        }
+
         _submenuOpen = submenuOpen;
         _submenuParentSlice = submenuParentSlice;
         _subActions = subActions;
@@ -96,24 +178,27 @@ public sealed class WheelCanvas : FrameworkElement
         DrawGlowRing(dc, cx, cy, outerR, outerRingColor, glowColor);
 
         // ── Draw 8 main wedges ──
-        for (int i = 0; i < WheelRenderer.SliceCount; i++)
+        // Sort indices by scale so popped-out wedges render on top
+        var indices = Enumerable.Range(0, WheelRenderer.SliceCount).OrderBy(i => _innerSliceScales[i]).ToList();
+        
+        foreach (int i in indices)
         {
+            var scale = _innerSliceScales[i];
+            
+            if (scale > 1.0)
+            {
+                var (sx, sy) = WheelRenderer.GetSliceCenter(i, innerR, outerR);
+                dc.PushTransform(new ScaleTransform(scale, scale, cx + sx, cy + sy));
+            }
+
             var geom = WheelRenderer.GetSliceGeometry(i, innerR, outerR, gap);
             var path = BuildSlicePath(geom, cx, cy);
 
             var isHovered = (i == _hoveredSlice && !_submenuOpen) ||
                            (i == _submenuParentSlice && _submenuOpen);
 
-            // Gradient fill
-            Brush fillBrush;
-            if (isHovered)
-            {
-                fillBrush = CreateRadialGradient(cx, cy, outerR, hoverColor, hoverEndColor);
-            }
-            else
-            {
-                fillBrush = CreateRadialGradient(cx, cy, outerR, bgColor, bgEndColor);
-            }
+            // Gradient fill - always use background color
+            Brush fillBrush = CreateRadialGradient(cx, cy, outerR, bgColor, bgEndColor);
 
             var borderPen = new Pen(new SolidColorBrush(separatorColor), 0.5);
             borderPen.Freeze();
@@ -123,9 +208,9 @@ public sealed class WheelCanvas : FrameworkElement
             // Draw icon + label
             if (i < _actions.Count)
             {
-                var txtColor = isHovered ? hoveredTextColor : textColor;
-                var subTxtColor = isHovered ? hoveredTextColor : subTextColor;
-                var iconColor = isHovered ? hoveredTextColor : textColor;
+                var txtColor = textColor;
+                var subTxtColor = subTextColor;
+                var iconColor = textColor;
 
                 DrawSliceContent(dc, i, _actions[i], innerR, outerR, cx, cy,
                     txtColor, subTxtColor, iconColor, isHovered, accentColor);
@@ -135,47 +220,53 @@ public sealed class WheelCanvas : FrameworkElement
             if (_appearance.ShowSliceNumbers)
             {
                 DrawSliceNumber(dc, i, outerR, cx, cy,
-                    isHovered ? hoveredTextColor : Color.FromArgb(80, 255, 255, 255));
+                    isHovered ? Colors.White : Color.FromArgb(80, 255, 255, 255));
+            }
+            
+            if (scale > 1.0)
+            {
+                dc.Pop();
             }
         }
 
         // ── Draw submenu ring ──
-        if (_submenuOpen && _subActions.Count > 0)
+        if (_submenuStates.Count > 0)
         {
-            // Submenu glow ring
-            DrawGlowRing(dc, cx, cy, subR, outerRingColor, glowColor);
-
-            for (int i = 0; i < WheelRenderer.SliceCount; i++)
+            // Draw animated contents (and backgrounds) for each state
+            
+            // Draw animated contents for each state
+            foreach (var state in _submenuStates)
             {
-                var geom = WheelRenderer.GetSliceGeometry(i, outerR + 4, subR, gap);
-                var path = BuildSlicePath(geom, cx, cy);
+                if (state.Opacity <= 0) continue;
 
-                var isHovered = i == _hoveredSubSlice;
+                dc.PushOpacity(state.Opacity);
+                var tg = new TransformGroup();
+                tg.Children.Add(new ScaleTransform(state.Scale, state.Scale, cx, cy));
+                tg.Children.Add(new RotateTransform(state.Rotation, cx, cy));
+                dc.PushTransform(tg);
 
-                Brush fillBrush;
-                if (isHovered)
+                for (int actionIdx = 0; actionIdx < state.Actions.Count; actionIdx++)
                 {
-                    fillBrush = CreateRadialGradient(cx, cy, subR, hoverColor, hoverEndColor);
+                    int visualSlice = WheelRenderer.GetSubmenuVisualSlice(actionIdx, state.Actions.Count, state.ParentSlice);
+
+                    // Draw background for this specific wedge
+                    var geom = WheelRenderer.GetSliceGeometry(visualSlice, outerR + 4, subR, gap);
+                    var path = BuildRoundedSlicePath(geom, cx, cy, 6.0); // 6px rounded corners
+
+                    Brush fillBrush = CreateRadialGradient(cx, cy, subR, bgColor, bgEndColor);
+                    var borderPen = new Pen(new SolidColorBrush(separatorColor), 0.5);
+                    borderPen.Freeze();
+
+                    dc.DrawGeometry(fillBrush, borderPen, path);
+
+                    // Draw content
+                    var isHovered = state.IsActive && actionIdx == _hoveredSubSlice;
+                    DrawSliceContent(dc, visualSlice, state.Actions[actionIdx], outerR + 4, subR, cx, cy,
+                        textColor, subTextColor, textColor, isHovered, accentColor);
                 }
-                else
-                {
-                    fillBrush = CreateRadialGradient(cx, cy, subR, bgColor, bgEndColor);
-                }
 
-                var borderPen = new Pen(new SolidColorBrush(separatorColor), 0.5);
-                borderPen.Freeze();
-
-                dc.DrawGeometry(fillBrush, borderPen, path);
-
-                if (i < _subActions.Count)
-                {
-                    var txtColor = isHovered ? hoveredTextColor : textColor;
-                    var subTxtColor = isHovered ? hoveredTextColor : subTextColor;
-                    var iconColor = isHovered ? hoveredTextColor : textColor;
-
-                    DrawSliceContent(dc, i, _subActions[i], outerR + 4, subR, cx, cy,
-                        txtColor, subTxtColor, iconColor, isHovered, accentColor);
-                }
+                dc.Pop(); // Transform
+                dc.Pop(); // Opacity
             }
         }
 
@@ -253,9 +344,9 @@ public sealed class WheelCanvas : FrameworkElement
             
             if (isHovered)
             {
-                // Simple glow behind the image
-                var glowPen = new Pen(new SolidColorBrush(Color.FromArgb(60, accentColor.R, accentColor.G, accentColor.B)), 4.0);
-                dc.DrawEllipse(null, glowPen, new Point(cx + sx, cy + sy - 10), imgSize / 2, imgSize / 2);
+                // Crisp white outline around the image
+                var outlinePen = new Pen(new SolidColorBrush(Colors.White), 2.0);
+                dc.DrawEllipse(null, outlinePen, new Point(cx + sx, cy + sy - 10), imgSize / 2 + 8, imgSize / 2 + 8);
             }
 
             dc.DrawImage(imageSource, rect);
@@ -267,12 +358,9 @@ public sealed class WheelCanvas : FrameworkElement
 
             if (isHovered)
             {
-                var glowIcon = CreateFormattedText(glyph,
-                    Color.FromArgb(60, accentColor.R, accentColor.G, accentColor.B),
-                    26, "Segoe MDL2 Assets");
-                dc.DrawText(glowIcon, new Point(
-                    cx + sx - glowIcon.Width / 2,
-                    cy + sy - glowIcon.Height / 2 - 10));
+                // Crisp white outline around the glyph
+                var outlinePen = new Pen(new SolidColorBrush(Colors.White), 2.0);
+                dc.DrawEllipse(null, outlinePen, new Point(cx + sx, cy + sy - 10), 22, 22);
             }
 
             var iconText = CreateFormattedText(glyph, iconColor, 24, "Segoe MDL2 Assets");
@@ -386,6 +474,80 @@ public sealed class WheelCanvas : FrameworkElement
             new Point(cx + geom.InnerStart.X, cy + geom.InnerStart.Y),
             new Size(geom.InnerRadius, geom.InnerRadius),
             0, geom.IsLargeArc, SweepDirection.Counterclockwise, true));
+
+        var pathGeom = new PathGeometry();
+        pathGeom.Figures.Add(fig);
+        return pathGeom;
+    }
+
+    /// <summary>
+    /// Builds a WPF PathGeometry for a wheel slice with mathematically exact rounded corners.
+    /// </summary>
+    private static PathGeometry BuildRoundedSlicePath(SliceGeometry geom, double cx, double cy, double r)
+    {
+        // If r is 0 or too large, fallback to sharp
+        if (r <= 0 || r > (geom.OuterRadius - geom.InnerRadius) / 2)
+            return BuildSlicePath(geom, cx, cy);
+
+        var R1 = geom.InnerRadius;
+        var R2 = geom.OuterRadius;
+        var A1 = geom.StartAngle;
+        var A2 = geom.EndAngle;
+
+        // Angle offsets for the corner centers
+        var deltaIn = Math.Asin(r / (R1 + r)) * (180.0 / Math.PI);
+        var deltaOut = Math.Asin(r / (R2 - r)) * (180.0 / Math.PI);
+
+        // Make sure the slice is wide enough for the corners
+        if (A2 - A1 < (deltaIn * 2)) return BuildSlicePath(geom, cx, cy);
+
+        // Distance from center to the tangent point on the straight edge
+        var D1 = Math.Sqrt((R1 + r) * (R1 + r) - r * r);
+        var D2 = Math.Sqrt((R2 - r) * (R2 - r) - r * r);
+
+        // Calculate all 8 key points
+        var pInnerStart = WheelRenderer.AngleToPoint(A1 + deltaIn, R1);
+        var pInnerEnd = WheelRenderer.AngleToPoint(A2 - deltaIn, R1);
+        var pOuterStart = WheelRenderer.AngleToPoint(A1 + deltaOut, R2);
+        var pOuterEnd = WheelRenderer.AngleToPoint(A2 - deltaOut, R2);
+
+        var pLine1In = WheelRenderer.AngleToPoint(A1, D1);
+        var pLine1Out = WheelRenderer.AngleToPoint(A1, D2);
+        var pLine2In = WheelRenderer.AngleToPoint(A2, D1);
+        var pLine2Out = WheelRenderer.AngleToPoint(A2, D2);
+
+        var fig = new PathFigure
+        {
+            StartPoint = new Point(cx + pLine1In.X, cy + pLine1In.Y),
+            IsClosed = true,
+            IsFilled = true,
+        };
+
+        var cornerSize = new Size(r, r);
+
+        // 1. Line to outer start of line 1
+        fig.Segments.Add(new LineSegment(new Point(cx + pLine1Out.X, cy + pLine1Out.Y), true));
+
+        // 2. Corner at outer start (Clockwise to Outer arc start)
+        fig.Segments.Add(new ArcSegment(new Point(cx + pOuterStart.X, cy + pOuterStart.Y), cornerSize, 0, false, SweepDirection.Clockwise, true));
+
+        // 3. Outer arc (Clockwise to Outer arc end)
+        fig.Segments.Add(new ArcSegment(new Point(cx + pOuterEnd.X, cy + pOuterEnd.Y), new Size(R2, R2), 0, geom.IsLargeArc, SweepDirection.Clockwise, true));
+
+        // 4. Corner at outer end (Clockwise to line 2 out)
+        fig.Segments.Add(new ArcSegment(new Point(cx + pLine2Out.X, cy + pLine2Out.Y), cornerSize, 0, false, SweepDirection.Clockwise, true));
+
+        // 5. Line to inner end of line 2
+        fig.Segments.Add(new LineSegment(new Point(cx + pLine2In.X, cy + pLine2In.Y), true));
+
+        // 6. Corner at inner end (Clockwise to Inner arc end)
+        fig.Segments.Add(new ArcSegment(new Point(cx + pInnerEnd.X, cy + pInnerEnd.Y), cornerSize, 0, false, SweepDirection.Clockwise, true));
+
+        // 7. Inner arc (CounterClockwise to Inner arc start)
+        fig.Segments.Add(new ArcSegment(new Point(cx + pInnerStart.X, cy + pInnerStart.Y), new Size(R1, R1), 0, geom.IsLargeArc, SweepDirection.Counterclockwise, true));
+
+        // 8. Corner at inner start (Clockwise to line 1 in)
+        fig.Segments.Add(new ArcSegment(new Point(cx + pLine1In.X, cy + pLine1In.Y), cornerSize, 0, false, SweepDirection.Clockwise, true));
 
         var pathGeom = new PathGeometry();
         pathGeom.Figures.Add(fig);

@@ -152,6 +152,77 @@
           "iconKey": "\uE710"
         }
       ]
+    },
+    {
+      "name": "Media",
+      "iconKey": "\uE892",
+      "slots": [
+        {
+          "actionId": "app_launch",
+          "label": "Spotify",
+          "iconKey": "https://img.icons8.com/color/48/000000/spotify.png",
+          "path": "spotify.exe"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Volume Up",
+          "iconKey": "\uE995"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Volume Down",
+          "iconKey": "\uE993"
+        }
+      ]
+    },
+    {
+      "name": "Dev",
+      "iconKey": "\uE943",
+      "slots": [
+        {
+          "actionId": "app_launch",
+          "label": "VS Code",
+          "iconKey": "https://img.icons8.com/color/48/000000/visual-studio-code-2019.png",
+          "path": "code"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Visual Studio",
+          "iconKey": "https://img.icons8.com/color/48/000000/visual-studio-logo-2019.png"
+        }
+      ]
+    },
+    {
+      "name": "Office",
+      "iconKey": "\uE82D",
+      "slots": [
+        {
+          "actionId": "app_launch",
+          "label": "Word",
+          "iconKey": "https://img.icons8.com/color/48/000000/ms-word.png"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Excel",
+          "iconKey": "https://img.icons8.com/color/48/000000/ms-excel.png"
+        }
+      ]
+    },
+    {
+      "name": "Games",
+      "iconKey": "\uE909",
+      "slots": [
+        {
+          "actionId": "app_launch",
+          "label": "Steam",
+          "iconKey": "https://img.icons8.com/color/48/000000/steam.png"
+        },
+        {
+          "actionId": "app_launch",
+          "label": "Xbox",
+          "iconKey": "https://img.icons8.com/color/48/000000/xbox.png"
+        }
+      ]
     }
   ],
   "appearance": {
@@ -162,16 +233,16 @@
     "backgroundColorEnd": "#D9181828",
     "hoverColor": "#F0E8E8F0",
     "hoverColorEnd": "#D0D0D0E0",
-    "accentColor": "#FF8B83FF",
-    "glowColor": "#606C63FF",
+    "accentColor": "#FFFFFFFF",
+    "glowColor": "#00000000",
     "textColor": "#FFFFFFFF",
     "subTextColor": "#99AAAAAA",
     "hoveredTextColor": "#FF1A1A2E",
     "opacity": 0.97,
     "hubColor": "#F0101018",
-    "hubBorderColor": "#80606080",
+    "hubBorderColor": "#60FFFFFF",
     "separatorColor": "#18FFFFFF",
-    "outerRingColor": "#30808098",
+    "outerRingColor": "#40FFFFFF",
     "sliceGapDegrees": 1.5,
     "showSliceNumbers": true
   }

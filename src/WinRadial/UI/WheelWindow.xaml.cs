@@ -28,6 +28,7 @@ public partial class WheelWindow : Window
     private int _hoveredSubSlice = -1;
     private bool _submenuOpen;
     private int _submenuParentSlice = -1;
+    private int _lockedSlice = -1;
     private List<IWheelAction> _subActions = [];
     private int _hoveredHubArea = -1;
 
@@ -105,6 +106,7 @@ public partial class WheelWindow : Window
             _hoveredSubSlice = -1;
             _submenuOpen = false;
             _submenuParentSlice = -1;
+            _lockedSlice = -1;
             _subActions.Clear();
             _hoveredHubArea = -1;
 
@@ -145,6 +147,7 @@ public partial class WheelWindow : Window
             Visibility = Visibility.Hidden;
             _submenuOpen = false;
             _submenuParentSlice = -1;
+            _lockedSlice = -1;
             _subActions.Clear();
         };
         BeginAnimation(OpacityProperty, fadeOut);
@@ -154,9 +157,8 @@ public partial class WheelWindow : Window
     {
         if (_categories.Count == 0) return;
 
-        _currentCategoryIndex = Math.Clamp(index, 0, _categories.Count - 1);
-        var category = _categories[_currentCategoryIndex];
-        _currentActions = _actionRegistry.CreateFromSlots(category.Slots);
+        _currentCategoryIndex = 0; // We don't paginate categories anymore, they are all in the inner ring
+        _currentActions = _categories.Select(c => (IWheelAction)new CategoryAction(c, _actionRegistry)).ToList();
 
         // Pad to 8 slots if needed (empty actions for visual consistency)
         while (_currentActions.Count < WheelRenderer.SliceCount)
@@ -167,6 +169,7 @@ public partial class WheelWindow : Window
 
         _submenuOpen = false;
         _submenuParentSlice = -1;
+        _lockedSlice = -1;
         _subActions.Clear();
 
         RefreshCanvas();
@@ -183,8 +186,8 @@ public partial class WheelWindow : Window
             _submenuParentSlice,
             _subActions,
             category?.Name ?? "WinRadial",
-            _currentCategoryIndex,
-            _categories.Count,
+            0,
+            1,
             _hoveredHubArea
         );
     }
@@ -220,22 +223,43 @@ public partial class WheelWindow : Window
         }
         else if (_submenuOpen && WheelRenderer.IsInSubRing(dx, dy, outerR, subR))
         {
-            _hoveredSubSlice = WheelRenderer.GetSliceIndex(dx, dy);
+            var visualSlice = WheelRenderer.GetSliceIndex(dx, dy);
+            _hoveredSubSlice = WheelRenderer.GetSubmenuActionIndex(visualSlice, _subActions.Count, _submenuParentSlice);
             _hoveredSlice = _submenuParentSlice;
             _hoveredHubArea = -1;
         }
         else if (WheelRenderer.IsInMainRing(dx, dy, innerR, outerR))
         {
-            _hoveredSlice = WheelRenderer.GetSliceIndex(dx, dy);
+            var slice = WheelRenderer.GetSliceIndex(dx, dy);
+            _hoveredSlice = slice;
             _hoveredSubSlice = -1;
             _hoveredHubArea = -1;
 
-            // Close submenu if we move back to main ring on a different slice
-            if (_submenuOpen && _hoveredSlice != _submenuParentSlice)
+            if (slice >= 0 && slice < _currentActions.Count)
             {
-                _submenuOpen = false;
-                _submenuParentSlice = -1;
-                _subActions.Clear();
+                var action = _currentActions[slice];
+                
+                // Only change submenu if not locked, or if hovering the locked slice itself
+                if (_lockedSlice == -1 || _lockedSlice == slice)
+                {
+                    if (action.HasSubmenu)
+                    {
+                        if (!_submenuOpen || _submenuParentSlice != slice)
+                        {
+                            OpenSubmenu(slice, action);
+                        }
+                    }
+                    else
+                    {
+                        // Close submenu if hovered slice has no submenu and we aren't locked
+                        if (_submenuOpen)
+                        {
+                            _submenuOpen = false;
+                            _submenuParentSlice = -1;
+                            _subActions.Clear();
+                        }
+                    }
+                }
             }
         }
         else
@@ -276,10 +300,11 @@ public partial class WheelWindow : Window
         else if (_submenuOpen && WheelRenderer.IsInSubRing(dx, dy, outerR, subR))
         {
             // Submenu slice click
-            var slice = WheelRenderer.GetSliceIndex(dx, dy);
-            if (slice >= 0 && slice < _subActions.Count)
+            var visualSlice = WheelRenderer.GetSliceIndex(dx, dy);
+            var actionIdx = WheelRenderer.GetSubmenuActionIndex(visualSlice, _subActions.Count, _submenuParentSlice);
+            if (actionIdx >= 0 && actionIdx < _subActions.Count)
             {
-                ExecuteAction(_subActions[slice]);
+                ExecuteAction(_subActions[actionIdx]);
             }
         }
         else if (WheelRenderer.IsInMainRing(dx, dy, innerR, outerR))
@@ -291,7 +316,20 @@ public partial class WheelWindow : Window
                 var action = _currentActions[slice];
                 if (action.HasSubmenu)
                 {
-                    OpenSubmenu(slice, action);
+                    // Toggle lock
+                    if (_lockedSlice == slice)
+                    {
+                        _lockedSlice = -1; // Unlock
+                    }
+                    else
+                    {
+                        _lockedSlice = slice; // Lock
+                        if (!_submenuOpen || _submenuParentSlice != slice)
+                        {
+                            OpenSubmenu(slice, action);
+                        }
+                    }
+                    RefreshCanvas();
                 }
                 else
                 {
@@ -318,6 +356,7 @@ public partial class WheelWindow : Window
                 {
                     _submenuOpen = false;
                     _submenuParentSlice = -1;
+                    _lockedSlice = -1;
                     _subActions.Clear();
                     RefreshCanvas();
                 }

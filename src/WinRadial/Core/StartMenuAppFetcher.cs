@@ -4,6 +4,12 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Linq;
+using System.Windows.Media;
+
+using System.Windows.Media.Imaging;
+using System.Windows.Interop;
+using System.Windows;
+using System.Drawing;
 
 namespace WinRadial.Core;
 
@@ -11,6 +17,7 @@ public class AppInfo
 {
     public string Name { get; set; } = string.Empty;
     public string ExecutablePath { get; set; } = string.Empty;
+    public ImageSource? Icon { get; set; }
 }
 
 public static class StartMenuAppFetcher
@@ -42,10 +49,26 @@ public static class StartMenuAppFetcher
                     {
                         if (File.Exists(targetPath))
                         {
+                            ImageSource? imgSource = null;
+                            try
+                            {
+                                using var sysIcon = Icon.ExtractAssociatedIcon(targetPath);
+                                if (sysIcon != null)
+                                {
+                                    imgSource = Imaging.CreateBitmapSourceFromHIcon(
+                                        sysIcon.Handle,
+                                        Int32Rect.Empty,
+                                        BitmapSizeOptions.FromEmptyOptions());
+                                    imgSource.Freeze(); // Make cross-thread safe
+                                }
+                            }
+                            catch { /* ignore icon extraction errors */ }
+
                             apps.Add(new AppInfo
                             {
                                 Name = appName,
-                                ExecutablePath = targetPath
+                                ExecutablePath = targetPath,
+                                Icon = imgSource
                             });
                             seenNames.Add(appName);
                         }

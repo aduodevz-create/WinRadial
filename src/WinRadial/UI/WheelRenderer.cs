@@ -116,6 +116,34 @@ public static class WheelRenderer
     }
 
     /// <summary>
+    /// Gets the visual slice index (0-7) for a submenu action, centering the submenu around the parent slice.
+    /// </summary>
+    public static int GetSubmenuVisualSlice(int actionIndex, int subActionCount, int parentSlice)
+    {
+        if (subActionCount == 0) return -1;
+        int offset = parentSlice - (subActionCount / 2);
+        int visualSlice = (offset + actionIndex) % SliceCount;
+        if (visualSlice < 0) visualSlice += SliceCount;
+        return visualSlice;
+    }
+
+    /// <summary>
+    /// Gets the action index for a given visual slice in the submenu ring, or -1 if the slice is empty.
+    /// </summary>
+    public static int GetSubmenuActionIndex(int visualSlice, int subActionCount, int parentSlice)
+    {
+        if (subActionCount == 0) return -1;
+        int offset = parentSlice - (subActionCount / 2);
+        for (int i = 0; i < subActionCount; i++)
+        {
+            int slice = (offset + i) % SliceCount;
+            if (slice < 0) slice += SliceCount;
+            if (slice == visualSlice) return i;
+        }
+        return -1;
+    }
+
+    /// <summary>
     /// Gets the 4 corner points of a slice (inner-start, outer-start, outer-end, inner-end)
     /// for constructing the arc path geometry. No gap applied.
     /// </summary>
