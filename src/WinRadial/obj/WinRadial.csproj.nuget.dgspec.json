@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mrgoy\\Desktop\\ewn\\src\\WinRadial\\WinRadial.csproj": {}
+    "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mrgoy\\Desktop\\ewn\\src\\WinRadial\\WinRadial.csproj": {
+    "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mrgoy\\Desktop\\ewn\\src\\WinRadial\\WinRadial.csproj",
+        "projectUniqueName": "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj",
         "projectName": "WinRadial",
-        "projectPath": "C:\\Users\\mrgoy\\Desktop\\ewn\\src\\WinRadial\\WinRadial.csproj",
+        "projectPath": "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj",
         "packagesPath": "C:\\Users\\mrgoy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mrgoy\\Desktop\\ewn\\src\\WinRadial\\obj\\",
+        "outputPath": "D:\\WINRADIAL\\src\\WinRadial\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mrgoy\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -52,6 +52,10 @@
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[8.0.10, )"
+            },
+            "Velopack": {
+              "target": "Package",
+              "version": "[1.2.0, )"
             }
           },
           "imports": [

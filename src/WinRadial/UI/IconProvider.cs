@@ -128,13 +128,25 @@ public static class IconProvider
         if (string.IsNullOrEmpty(iconKey))
             return "\uE737"; // Default app icon
 
-        // If it's already a Unicode glyph character
-        if (iconKey.Length <= 2 && iconKey[0] >= 0xE000)
-            return iconKey;
+        // If it's a URL or any other long string that isn't a known name,
+        // it shouldn't be returned directly as it will render as a bunch of missing glyphs.
+        if (iconKey.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || 
+            iconKey.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        {
+            return "\uE896"; // Download icon for pending/failed URL icons
+        }
 
         // Look up in glyph map
         if (GlyphMap.TryGetValue(iconKey, out var glyph))
             return glyph;
+
+        // If it's already a Unicode glyph character
+        if (iconKey.Length <= 2 && iconKey[0] >= 0xE000)
+            return iconKey;
+
+        // If it's longer than 2 characters and wasn't in the map, it's an invalid glyph key
+        if (iconKey.Length > 2)
+            return "\uE737"; // Default app icon
 
         // Return as-is (might be a direct glyph string from config)
         return iconKey;

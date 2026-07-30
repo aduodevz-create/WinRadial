@@ -41,7 +41,16 @@ public partial class AppDrawerWindow : Window
         }
         if (CategoryCombo.Items.Count > 0)
         {
-            CategoryCombo.SelectedIndex = 0;
+            int customizeIdx = -1;
+            for (int i = 0; i < CategoryCombo.Items.Count; i++)
+            {
+                if (CategoryCombo.Items[i].ToString() == "Customize")
+                {
+                    customizeIdx = i;
+                    break;
+                }
+            }
+            CategoryCombo.SelectedIndex = customizeIdx >= 0 ? customizeIdx : 0;
         }
 
         // Load apps asynchronously so we don't freeze the UI

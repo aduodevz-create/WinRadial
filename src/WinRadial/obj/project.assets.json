@@ -48,6 +48,19 @@
         "build": {
           "buildTransitive/net6.0/_._": {}
         }
+      },
+      "Velopack/1.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Velopack.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Velopack.dll": {
+            "related": ".xml"
+          }
+        }
       }
     },
     "net8.0-windows7.0/win-x64": {
@@ -90,6 +103,19 @@
         },
         "build": {
           "buildTransitive/net6.0/_._": {}
+        }
+      },
+      "Velopack/1.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Velopack.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Velopack.dll": {
+            "related": ".xml"
+          }
         }
       }
     }
@@ -220,12 +246,36 @@
         "system.drawing.common.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "Velopack/1.2.0": {
+      "sha512": "Rz67gJL619fSBS6omaSINUxyDuwhIxkm5mmubf7uLd5Qgi6LLKaKCha+QFP6n+Bw/UjA0vutnH4JQfYzn6ANtw==",
+      "type": "package",
+      "path": "velopack/1.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README_NUGET.md",
+        "Velopack_200.png",
+        "lib/net10.0/Velopack.dll",
+        "lib/net10.0/Velopack.xml",
+        "lib/net472/Velopack.dll",
+        "lib/net472/Velopack.xml",
+        "lib/net8.0/Velopack.dll",
+        "lib/net8.0/Velopack.xml",
+        "lib/net9.0/Velopack.dll",
+        "lib/net9.0/Velopack.xml",
+        "lib/netstandard2.0/Velopack.dll",
+        "lib/netstandard2.0/Velopack.xml",
+        "velopack.1.2.0.nupkg.sha512",
+        "velopack.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net8.0-windows7.0": [
       "Microsoft.NET.ILLink.Tasks >= 8.0.29",
-      "System.Drawing.Common >= 8.0.10"
+      "System.Drawing.Common >= 8.0.10",
+      "Velopack >= 1.2.0"
     ]
   },
   "packageFolders": {
@@ -234,11 +284,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mrgoy\\Desktop\\ewn\\src\\WinRadial\\WinRadial.csproj",
+      "projectUniqueName": "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj",
       "projectName": "WinRadial",
-      "projectPath": "C:\\Users\\mrgoy\\Desktop\\ewn\\src\\WinRadial\\WinRadial.csproj",
+      "projectPath": "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj",
       "packagesPath": "C:\\Users\\mrgoy\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mrgoy\\Desktop\\ewn\\src\\WinRadial\\obj\\",
+      "outputPath": "D:\\WINRADIAL\\src\\WinRadial\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\mrgoy\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -279,6 +329,10 @@
           "System.Drawing.Common": {
             "target": "Package",
             "version": "[8.0.10, )"
+          },
+          "Velopack": {
+            "target": "Package",
+            "version": "[1.2.0, )"
           }
         },
         "imports": [

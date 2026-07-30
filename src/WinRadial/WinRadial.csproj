@@ -10,6 +10,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>WinRadial</RootNamespace>
     <AssemblyName>WinRadial</AssemblyName>
+    <StartupObject>WinRadial.Program</StartupObject>
 
     <!-- Publishing -->
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -33,6 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+    <PackageReference Include="Velopack" Version="1.2.0" />
   </ItemGroup>
 
 </Project>

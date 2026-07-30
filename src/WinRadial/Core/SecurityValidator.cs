@@ -83,6 +83,25 @@ public static partial class SecurityValidator
     /// </summary>
     public static (bool IsValid, string? ResolvedPath, string? Error) ValidateExecutablePath(string? path)
     {
+        if (string.IsNullOrWhiteSpace(path))
+            return (false, null, "Path is null or empty.");
+
+        // Allow URI schemes (e.g., http://, steam:, ms-settings:)
+        if (Uri.TryCreate(path, UriKind.Absolute, out var uri) && uri.Scheme != "file")
+        {
+            return (true, path, null);
+        }
+
+        // If it's a simple command without directory separators, allow it
+        // This relies on Process.Start finding it in PATH or App Paths registry key
+        if (!path.Contains('/') && !path.Contains('\\'))
+        {
+            if (ShellMetacharPattern().IsMatch(path))
+                return (false, null, $"Path contains shell metacharacters: {path}");
+            
+            return (true, path, null);
+        }
+
         var (isValid, error) = ValidatePath(path);
         if (!isValid)
             return (false, null, error);

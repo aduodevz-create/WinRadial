@@ -67,6 +67,15 @@ public partial class WheelWindow : Window
         _canvas = new WheelCanvas(config.Appearance);
         RootGrid.Children.Add(_canvas);
 
+        if (IsVisible)
+        {
+            _canvas.Width = Width;
+            _canvas.Height = Height;
+            _canvas.RenderTransform = new TranslateTransform(
+                _wheelCenterX - Width / 2,
+                _wheelCenterY - Height / 2);
+        }
+
         _currentCategoryIndex = 0;
         LoadCategory(0);
     }
@@ -273,9 +282,55 @@ public partial class WheelWindow : Window
         RefreshCanvas();
     }
 
+    protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+    {
+        base.OnMouseRightButtonDown(e);
+        if (e.Handled) return;
+
+        var pos = e.GetPosition(_canvas);
+        var dx = pos.X - _canvas.CenterX;
+        var dy = pos.Y - _canvas.CenterY;
+
+        var innerR = _config.Appearance.InnerRadius;
+        var outerR = _config.Appearance.OuterRadius;
+        var subR = _config.Appearance.SubMenuRadius;
+
+        var app = Application.Current as App;
+        if (app == null || app.ConfigService == null) return;
+
+        if (_submenuOpen && WheelRenderer.IsInSubRing(dx, dy, outerR, subR))
+        {
+            var visualSlice = WheelRenderer.GetSliceIndex(dx, dy);
+            var actionIdx = WheelRenderer.GetSubmenuActionIndex(visualSlice, _subActions.Count, _submenuParentSlice);
+            
+            if (actionIdx >= 0 && actionIdx < _subActions.Count && _submenuParentSlice >= 0 && _submenuParentSlice < _categories.Count)
+            {
+                var cat = _categories[_submenuParentSlice];
+                if (actionIdx < cat.Slots.Count)
+                {
+                    cat.Slots.RemoveAt(actionIdx);
+                    app.ConfigService.Save(_config);
+                    app.ReloadConfig();
+                }
+            }
+        }
+        else if (WheelRenderer.IsInMainRing(dx, dy, innerR, outerR))
+        {
+            var slice = WheelRenderer.GetSliceIndex(dx, dy);
+            if (slice >= 0 && slice < _categories.Count)
+            {
+                _categories.RemoveAt(slice);
+                app.ConfigService.Save(_config);
+                app.ReloadConfig();
+            }
+        }
+    }
+
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
     {
         base.OnMouseLeftButtonDown(e);
+
+        if (e.Handled) return;
 
         var pos = e.GetPosition(_canvas);
         var dx = pos.X - _canvas.CenterX;
@@ -339,7 +394,8 @@ public partial class WheelWindow : Window
         }
         else
         {
-            // Click outside — do nothing, keep wheel open
+            // Click outside — hide wheel
+            HideWheel();
         }
     }
 
@@ -477,6 +533,17 @@ public partial class WheelWindow : Window
                 Topmost = true;
                 Activate();
             }
+        }
+    }
+
+    private void BtnSettings_Click(object sender, RoutedEventArgs e)
+    {
+        HideWheel();
+        var app = Application.Current as App;
+        if (app != null && app.ConfigService != null)
+        {
+            var win = new SettingsWindow(app.ConfigService);
+            win.ShowDialog();
         }
     }
 }

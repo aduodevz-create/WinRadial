@@ -10,5 +10,21 @@
         ResizeMode="NoResize"
         WindowStartupLocation="Manual">
     <!-- Content is the WheelCanvas, added in code-behind -->
-    <Grid x:Name="RootGrid" />
+    <Grid x:Name="RootGrid" Background="#01000000">
+        <!-- Floating Settings Button -->
+        <Button x:Name="BtnSettings" Content="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="18"
+                Width="44" Height="44" Margin="30" 
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Background="#2A2A30" Foreground="#DDDDDD" BorderThickness="1" BorderBrush="#44444C"
+                Click="BtnSettings_Click" Panel.ZIndex="100">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="22"/>
+                </Style>
+            </Button.Resources>
+            <Button.ToolTip>
+                <ToolTip Content="Settings" Background="#1A1A1E" Foreground="White" BorderBrush="#33333C"/>
+            </Button.ToolTip>
+        </Button>
+    </Grid>
 </Window>

@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Threading;
+using Velopack;
 using WinRadial.Actions;
 using WinRadial.Core;
 using WinRadial.Tray;
@@ -15,7 +16,7 @@ public partial class App : Application
 {
     private Mutex? _singleInstanceMutex;
     private LogService? _logService;
-    private ConfigService? _configService;
+    public ConfigService? ConfigService { get; private set; }
     private HotkeyManager? _hotkeyManager;
     private WheelWindow? _wheelWindow;
     private TrayIconManager? _trayIconManager;
@@ -60,12 +61,12 @@ public partial class App : Application
         _logService.Info("WinRadial starting up...");
 
         // 2. Load and validate configuration
-        _configService = new ConfigService(_logService);
-        var config = _configService.Load();
+        ConfigService = new ConfigService(_logService);
+        var config = ConfigService.Load();
         _logService.Info($"Config loaded: {config.Categories.Count} categories, hotkey={config.Hotkey.Modifiers}+{config.Hotkey.Key}");
 
         // 3. Action registry
-        _actionRegistry = new ActionRegistry(_logService, _configService);
+        _actionRegistry = new ActionRegistry(_logService, ConfigService);
 
         // 4. Create the wheel window (hidden, reused across activations)
         _wheelWindow = new WheelWindow(config, _actionRegistry, _logService);
@@ -76,7 +77,7 @@ public partial class App : Application
         _hotkeyManager.Register();
 
         // 6. System tray icon
-        _trayIconManager = new TrayIconManager(_logService, _configService, ReloadConfig, OnExit);
+        _trayIconManager = new TrayIconManager(_logService, ConfigService, ReloadConfig, OnExit);
 
         _logService.Info("WinRadial startup complete.");
     }
@@ -99,10 +100,10 @@ public partial class App : Application
     {
         try
         {
-            if (_configService == null || _wheelWindow == null || _hotkeyManager == null) return;
+            if (ConfigService == null || _wheelWindow == null || _hotkeyManager == null) return;
 
             _logService?.Info("Reloading configuration...");
-            var config = _configService.Load();
+            var config = ConfigService.Load();
 
             // Re-register hotkey if changed
             _hotkeyManager.Unregister();

@@ -11,5 +11,13 @@ if not exist "%DOTNET%" (
     exit /b 1
 )
 
-echo Starting WinRadial...
-"%DOTNET%" run --project "%~dp0src\WinRadial"
+echo Building WinRadial...
+"%DOTNET%" build "%~dp0src\WinRadial"
+if errorlevel 1 (
+    echo Build failed.
+    pause
+    exit /b 1
+)
+
+echo Starting WinRadial (Administrator privileges required)...
+start "" "%~dp0src\WinRadial\bin\Debug\net8.0-windows\win-x64\WinRadial.exe"

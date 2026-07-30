@@ -42,7 +42,7 @@
           "actionId": "app_launch",
           "label": "Browser",
           "iconKey": "\uE774",
-          "path": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+          "path": "microsoft-edge:"
         },
         {
           "actionId": "app_launch",
@@ -161,7 +161,7 @@
           "actionId": "app_launch",
           "label": "Spotify",
           "iconKey": "https://img.icons8.com/color/48/000000/spotify.png",
-          "path": "spotify.exe"
+          "path": "spotify:"
         },
         {
           "actionId": "app_launch",
@@ -188,7 +188,8 @@
         {
           "actionId": "app_launch",
           "label": "Visual Studio",
-          "iconKey": "https://img.icons8.com/color/48/000000/visual-studio-logo-2019.png"
+          "iconKey": "https://img.icons8.com/color/48/000000/visual-studio-logo-2019.png",
+          "path": "devenv"
         }
       ]
     },
@@ -199,12 +200,14 @@
         {
           "actionId": "app_launch",
           "label": "Word",
-          "iconKey": "https://img.icons8.com/color/48/000000/ms-word.png"
+          "iconKey": "https://img.icons8.com/color/48/000000/ms-word.png",
+          "path": "winword"
         },
         {
           "actionId": "app_launch",
           "label": "Excel",
-          "iconKey": "https://img.icons8.com/color/48/000000/ms-excel.png"
+          "iconKey": "https://img.icons8.com/color/48/000000/ms-excel.png",
+          "path": "excel"
         }
       ]
     },
@@ -215,12 +218,14 @@
         {
           "actionId": "app_launch",
           "label": "Steam",
-          "iconKey": "https://img.icons8.com/color/48/000000/steam.png"
+          "iconKey": "https://img.icons8.com/color/48/000000/steam.png",
+          "path": "steam:"
         },
         {
           "actionId": "app_launch",
           "label": "Xbox",
-          "iconKey": "https://img.icons8.com/color/48/000000/xbox.png"
+          "iconKey": "https://img.icons8.com/color/48/000000/xbox.png",
+          "path": "xbox:"
         }
       ]
     }
