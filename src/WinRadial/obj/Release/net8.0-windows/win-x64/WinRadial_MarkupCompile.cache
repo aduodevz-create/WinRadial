@@ -4,15 +4,15 @@
 winexe
 C#
 .cs
-C:\Users\mrgoy\Desktop\ewn\src\WinRadial\obj\Release\net8.0-windows\win-x64\
+D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\
 WinRadial
 none
 false
 TRACE;RELEASE;NET;NET8_0;NETCOREAPP
-C:\Users\mrgoy\Desktop\ewn\src\WinRadial\App.xaml
+D:\WINRADIAL\src\WinRadial\App.xaml
 31935058469
 
-27-1683688991
+28-696968465
 200-1707591965
 UI\AppDrawerWindow.xaml;UI\SettingsWindow.xaml;UI\WheelWindow.xaml;
 
