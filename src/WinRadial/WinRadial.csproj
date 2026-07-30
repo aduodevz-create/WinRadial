@@ -10,6 +10,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>WinRadial</RootNamespace>
     <AssemblyName>WinRadial</AssemblyName>
+    <ApplicationIcon>Resources\app_icon.ico</ApplicationIcon>
     <StartupObject>WinRadial.Program</StartupObject>
 
     <!-- Publishing -->
