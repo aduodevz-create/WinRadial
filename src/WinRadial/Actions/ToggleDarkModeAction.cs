@@ -20,6 +20,7 @@ public sealed class ToggleDarkModeAction : IWheelAction
     public string Label { get; }
     public string IconKey { get; }
     public bool HasSubmenu => false;
+    public bool CloseWheelOnExecute => true;
 
     public ToggleDarkModeAction(string label, string iconKey, LogService log)
     {

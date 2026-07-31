@@ -23,4 +23,7 @@ public interface IWheelAction
 
     /// <summary>Returns child actions for the submenu ring (empty if HasSubmenu is false).</summary>
     IReadOnlyList<IWheelAction> GetSubActions();
+
+    /// <summary>Whether the wheel should be closed immediately before executing this action.</summary>
+    bool CloseWheelOnExecute => false;
 }

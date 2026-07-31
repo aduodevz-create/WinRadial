@@ -14,6 +14,7 @@ public sealed class EmptyRecycleBinAction : IWheelAction
     public string Label { get; }
     public string IconKey { get; }
     public bool HasSubmenu => false;
+    public bool CloseWheelOnExecute => true;
 
     public EmptyRecycleBinAction(string label, string iconKey, LogService log)
     {

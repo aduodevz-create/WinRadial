@@ -15,6 +15,7 @@ public sealed class OpenFolderAction : IWheelAction
     public string Label { get; }
     public string IconKey { get; }
     public bool HasSubmenu => false;
+    public bool CloseWheelOnExecute => true;
 
     public OpenFolderAction(string label, string iconKey, string path, LogService log)
     {

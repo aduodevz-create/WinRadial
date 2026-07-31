@@ -21,6 +21,7 @@ public sealed class AppLaunchAction : IWheelAction
     public string IconKey { get; }
     public string Path => _path;
     public bool HasSubmenu => _children is { Count: > 0 };
+    public bool CloseWheelOnExecute => !HasSubmenu;
 
     public AppLaunchAction(string label, string iconKey, string path,
         string? arguments, List<ActionSlotConfig>? children,

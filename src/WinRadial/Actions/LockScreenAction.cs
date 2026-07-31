@@ -11,6 +11,7 @@ public sealed class LockScreenAction : IWheelAction
     public string Label { get; }
     public string IconKey { get; }
     public bool HasSubmenu => false;
+    public bool CloseWheelOnExecute => true;
 
     public LockScreenAction(string label, string iconKey)
     {

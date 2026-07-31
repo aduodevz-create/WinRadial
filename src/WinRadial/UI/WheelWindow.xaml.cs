@@ -514,6 +514,15 @@ public partial class WheelWindow : Window
 
     private async void ExecuteAction(IWheelAction action)
     {
+        if (action.CloseWheelOnExecute)
+        {
+            Visibility = Visibility.Hidden;
+            _submenuOpen = false;
+            _submenuParentSlice = -1;
+            _lockedSlice = -1;
+            _subActions.Clear();
+        }
+
         try
         {
             _log.Info($"Executing action: {action.Id} ({action.Label})");

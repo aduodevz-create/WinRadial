@@ -11,6 +11,7 @@ public sealed class SleepAction : IWheelAction
     public string Label { get; }
     public string IconKey { get; }
     public bool HasSubmenu => false;
+    public bool CloseWheelOnExecute => true;
 
     public SleepAction(string label, string iconKey)
     {

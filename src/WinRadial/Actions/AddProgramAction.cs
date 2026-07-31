@@ -17,6 +17,7 @@ public sealed class AddProgramAction : IWheelAction
     public string Label { get; }
     public string IconKey { get; }
     public bool HasSubmenu => false;
+    public bool CloseWheelOnExecute => true;
 
     public AddProgramAction(string label, string iconKey, ConfigService configService, LogService log)
     {
