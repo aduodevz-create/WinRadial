@@ -12,6 +12,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = WinRadial
-build_property.ProjectDir = D:\WINRADIAL\src\WinRadial\
+build_property.ProjectDir = D:\WinRadial\src\WinRadial\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

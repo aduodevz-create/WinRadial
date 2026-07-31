@@ -35,11 +35,9 @@ D:\WINRADIAL\src\WinRadial\bin\Release\net8.0-windows\win-x64\WinRadial.pdb
 D:\WINRADIAL\src\WinRadial\bin\Release\net8.0-windows\win-x64\System.Drawing.Common.dll
 D:\WINRADIAL\src\WinRadial\bin\Release\net8.0-windows\win-x64\Velopack.dll
 D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\WinRadial.csproj.AssemblyReference.cache
-D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\UI\AppDrawerWindow.baml
 D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\UI\SettingsWindow.baml
 D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\UI\WheelWindow.baml
 D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\App.baml
-D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\UI\AppDrawerWindow.g.cs
 D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\UI\SettingsWindow.g.cs
 D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\UI\WheelWindow.g.cs
 D:\WINRADIAL\src\WinRadial\obj\Release\net8.0-windows\win-x64\App.g.cs

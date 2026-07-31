@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj": {}
+    "D:\\WinRadial\\src\\WinRadial\\WinRadial.csproj": {}
   },
   "projects": {
-    "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj": {
+    "D:\\WinRadial\\src\\WinRadial\\WinRadial.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj",
+        "projectUniqueName": "D:\\WinRadial\\src\\WinRadial\\WinRadial.csproj",
         "projectName": "WinRadial",
-        "projectPath": "D:\\WINRADIAL\\src\\WinRadial\\WinRadial.csproj",
+        "projectPath": "D:\\WinRadial\\src\\WinRadial\\WinRadial.csproj",
         "packagesPath": "C:\\Users\\mrgoy\\.nuget\\packages\\",
-        "outputPath": "D:\\WINRADIAL\\src\\WinRadial\\obj\\",
+        "outputPath": "D:\\WinRadial\\src\\WinRadial\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mrgoy\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -91,7 +91,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.423/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\mrgoy\\AppData\\Local\\Microsoft\\dotnet\\sdk\\8.0.423/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {

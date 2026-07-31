@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\WINRADIAL\src\WinRadial\obj\Debug\net8.0-windows\win-x64\
+D:\WinRadial\src\WinRadial\obj\Debug\net8.0-windows\win-x64\
 WinRadial
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-D:\WINRADIAL\src\WinRadial\App.xaml
-31935058469
+D:\WinRadial\src\WinRadial\App.xaml
+2-370508464
 
-281446227688
+27-4089979
 200-770492981
-UI\AppDrawerWindow.xaml;UI\SettingsWindow.xaml;UI\WheelWindow.xaml;
+UI\SettingsWindow.xaml;UI\WheelWindow.xaml;
 
 False
 

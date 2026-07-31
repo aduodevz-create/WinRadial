@@ -19,8 +19,8 @@ public partial class App : Application
     public ConfigService? ConfigService { get; private set; }
     private HotkeyManager? _hotkeyManager;
     private WheelWindow? _wheelWindow;
-    private TrayIconManager? _trayIconManager;
-    private ActionRegistry? _actionRegistry;
+    public TrayIconManager? _trayIconManager;
+    public ActionRegistry? ActionRegistry { get; private set; }
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -66,10 +66,10 @@ public partial class App : Application
         _logService.Info($"Config loaded: {config.Categories.Count} categories, hotkey={config.Hotkey.Modifiers}+{config.Hotkey.Key}");
 
         // 3. Action registry
-        _actionRegistry = new ActionRegistry(_logService, ConfigService);
+        ActionRegistry = new ActionRegistry(_logService, ConfigService);
 
         // 4. Create the wheel window (hidden, reused across activations)
-        _wheelWindow = new WheelWindow(config, _actionRegistry, _logService);
+        _wheelWindow = new WheelWindow(config, ActionRegistry, _logService);
 
         // 5. Register global hotkey
         _hotkeyManager = new HotkeyManager(config.Hotkey, _logService);

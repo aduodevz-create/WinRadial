@@ -31,8 +31,36 @@ public sealed class AddProgramAction : IWheelAction
         try
         {
             var config = _configService.Load();
-            var window = new AppDrawerWindow(config);
-            if (window.ShowDialog() == true && window.SelectedApp != null)
+            var window = new SettingsWindow(_configService, "Apps");
+
+            // Position the window opposite to the cursor so it doesn't overlap the wheel
+            var (cursorX, cursorY) = WindowInterop.GetCursorPosition();
+            var (monitorBounds, _, dpiX, _) = WindowInterop.GetMonitorInfoForPoint(cursorX, cursorY);
+            
+            var scale = dpiX / 96.0;
+            var monWidth = (monitorBounds.Right - monitorBounds.Left) / scale;
+            
+            window.WindowStartupLocation = WindowStartupLocation.Manual;
+            window.Top = (monitorBounds.Top / scale) + 100;
+            
+            var cursorRelativeX = (cursorX - monitorBounds.Left) / scale;
+            if (cursorRelativeX > monWidth / 2)
+            {
+                // Cursor is on the right half, put window on the left
+                window.Left = (monitorBounds.Left / scale) + 100;
+            }
+            else
+            {
+                // Cursor is on the left half, put window on the right
+                window.Left = (monitorBounds.Right / scale) - window.Width - 100;
+            }
+
+            var tcs = new TaskCompletionSource<bool>();
+            window.Closed += (s, e) => tcs.TrySetResult(window.IsSuccess);
+            window.Show();
+
+            var success = await tcs.Task;
+            if (success && window.SelectedApp != null)
             {
                 var app = window.SelectedApp;
                 
