@@ -30,7 +30,7 @@ public sealed class ActionSlotConfig
     public string ActionId { get; init; } = "";
     public string? Label { get; init; }
     public string? IconKey { get; init; }
-    public string? Path { get; init; }
+    public string? Path { get; set; }
     public string? Arguments { get; init; }
     public List<ActionSlotConfig>? Children { get; init; }
 }
