@@ -20,6 +20,7 @@ public static partial class SecurityValidator
         "app_launch",
         "open_folder",
         "add_program",
+        "media_key",
         "separator"
     };
 

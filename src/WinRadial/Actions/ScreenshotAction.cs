@@ -46,6 +46,9 @@ public sealed class ScreenshotAction : IWheelAction
                 graphics.CopyFromScreen(left, top, 0, 0, new System.Drawing.Size(width, height));
             }
 
+            // Audio feedback so the user knows it worked
+            System.Media.SystemSounds.Asterisk.Play();
+
             // Copy to clipboard (prioritize this so it works even if file save fails)
             try
             {

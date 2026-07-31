@@ -80,6 +80,19 @@ public sealed class ConfigService
                     {
                         slot.Path = "vscode://";
                     }
+                    if (slot.ActionId == "app_launch" && string.IsNullOrEmpty(slot.Path))
+                    {
+                        if (slot.Label == "Volume Up")
+                        {
+                            slot.ActionId = "media_key";
+                            slot.Arguments = "volume_up";
+                        }
+                        else if (slot.Label == "Volume Down")
+                        {
+                            slot.ActionId = "media_key";
+                            slot.Arguments = "volume_down";
+                        }
+                    }
                     if (slot.Children != null)
                     {
                         foreach (var child in slot.Children)

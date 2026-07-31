@@ -164,14 +164,16 @@
           "path": "spotify:"
         },
         {
-          "actionId": "app_launch",
+          "actionId": "media_key",
           "label": "Volume Up",
-          "iconKey": "\uE995"
+          "iconKey": "\uE995",
+          "arguments": "volume_up"
         },
         {
-          "actionId": "app_launch",
+          "actionId": "media_key",
           "label": "Volume Down",
-          "iconKey": "\uE993"
+          "iconKey": "\uE993",
+          "arguments": "volume_down"
         }
       ]
     },

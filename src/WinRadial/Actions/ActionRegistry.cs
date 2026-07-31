@@ -69,6 +69,12 @@ public sealed class ActionRegistry
                 _configService,
                 _log),
 
+            "media_key" => new MediaKeyAction(
+                slot.Label ?? "Media",
+                slot.IconKey ?? "\uE995",
+                slot.Arguments,
+                _log),
+
             "separator" => null, // Separators are visual-only, no action
 
             _ => null
