@@ -183,7 +183,7 @@
           "actionId": "app_launch",
           "label": "VS Code",
           "iconKey": "https://img.icons8.com/color/48/000000/visual-studio-code-2019.png",
-          "path": "code"
+          "path": "vscode://"
         },
         {
           "actionId": "app_launch",

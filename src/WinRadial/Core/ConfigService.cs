@@ -71,6 +71,28 @@ public sealed class ConfigService
                 return LoadEmbeddedDefault();
             }
 
+            // Auto-migrate legacy VS Code paths
+            foreach (var category in config.Categories)
+            {
+                foreach (var slot in category.Slots)
+                {
+                    if (slot.ActionId == "app_launch" && string.Equals(slot.Path, "code", StringComparison.OrdinalIgnoreCase))
+                    {
+                        slot.Path = "vscode://";
+                    }
+                    if (slot.Children != null)
+                    {
+                        foreach (var child in slot.Children)
+                        {
+                            if (child.ActionId == "app_launch" && string.Equals(child.Path, "code", StringComparison.OrdinalIgnoreCase))
+                            {
+                                child.Path = "vscode://";
+                            }
+                        }
+                    }
+                }
+            }
+
             return config;
         }
         catch (JsonException ex)
