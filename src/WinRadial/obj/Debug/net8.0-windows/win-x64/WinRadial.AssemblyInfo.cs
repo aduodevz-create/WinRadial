@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WinRadial")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e7413178599f1ecb4dc3ce81f7e039575db92435")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+027e174beb8c10843c209f26a42f8035d5e57351")]
 [assembly: System.Reflection.AssemblyProductAttribute("WinRadial")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WinRadial")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
